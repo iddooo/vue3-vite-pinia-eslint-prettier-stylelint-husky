@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\""
   },
   "dependencies": {
     "vue": "^3.3.11"
@@ -16,6 +17,7 @@
     "@vitejs/plugin-vue": "^4.5.2",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.19.2",
+    "prettier": "^3.1.1",
     "vite": "^5.0.8"
   }
 }
