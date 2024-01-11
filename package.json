@@ -8,7 +8,9 @@
 		"preview": "vite preview",
 		"lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",
 		"lint:eslint": "eslint --fix --ext .js --ext .jsx --ext .vue src/",
-		"lint:stylelint": "stylelint --config .stylelintrc.js **/*.{css,sass,scss,less} --fix"
+		"lint:stylelint": "stylelint --config .stylelintrc.js **/*.{css,sass,scss,less} --fix",
+		"commit": "git-cz",
+		"lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js"
 	},
 	"dependencies": {
 		"stylelint": "^16.1.0",
@@ -18,13 +20,21 @@
 		"@typescript-eslint/eslint-plugin": "^6.18.1",
 		"@typescript-eslint/parser": "^6.18.1",
 		"@vitejs/plugin-vue": "^4.5.2",
+		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.56.0",
 		"eslint-plugin-vue": "^9.19.2",
+		"husky": "^8.0.3",
+		"lint-staged": "^15.2.0",
 		"prettier": "^3.1.1",
 		"stylelint-config-html": "^1.1.0",
 		"stylelint-config-standard-scss": "^13.0.0",
 		"stylelint-order": "^6.0.4",
 		"stylelint-prettier": "^5.0.0",
 		"vite": "^5.0.8"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
 	}
 }
