@@ -1,0 +1,52 @@
+import { defineStore } from 'pinia';
+
+export const useConfig = defineStore('config', {
+	state: () => ({
+		themeConfig: {
+			/**
+			 * 全局主题
+			 */
+			// 默认 primary 主题颜色
+			primary: '#409eff',
+
+			/**
+			 * 顶栏设置
+			 */
+			/**
+			 * 顶栏设置
+			 */
+			// 默认顶栏导航背景颜色
+			topBar: '#ffffff',
+			// 默认顶栏导航字体颜色
+			topBarColor: '#606266',
+			/**
+			 * 菜单设置
+			 */
+			// 菜单背景颜色
+			menuBar: '#545c64',
+			// 菜单默认字体颜色
+			menuBarColor: '#eaeaea',
+			// 菜单高亮背景色
+			menuBarActiveColor: 'rgba(0, 0, 0, 0.2)',
+			/**
+			 * 界面设置
+			 */
+			// 是否开启菜单水平折叠效果
+			isCollapse: false,
+			// 是否开启菜单手风琴效果
+			isUniqueOpened: true,
+			/**
+			 * 布局切换
+			 * 注意：为了演示，切换布局时，颜色会被还原成默认，代码位置：/@/layout/topBar/setings.vue
+			 * 中的 `initSetLayoutChange(设置布局切换，重置主题样式)` 方法
+			 */
+			// 布局切换：可选值"<defaults|classic|transverse|columns>"，默认 defaults
+			layout: 'defaults',
+		},
+	}),
+	actions: {
+		setThemeConfig(state) {
+			this.themeConfig = state.themeConfig;
+		},
+	},
+});

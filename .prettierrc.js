@@ -33,7 +33,9 @@ module.exports = {
 	// 指定HTML文件的全局空格敏感度 css\strict\ignore
 	htmlWhitespaceSensitivity: 'css',
 	// Vue文件脚本和样式标签缩进
-	vueIndentScriptAndStyle: false,
+	vueIndentScriptAndStyle: true,
 	// 换行符使用 lf 结尾是 可选值"<auto|lf|crlf|cr>"
 	endOfLine: 'lf',
+	// 加空格
+	bracketSpacing: true,
 };
