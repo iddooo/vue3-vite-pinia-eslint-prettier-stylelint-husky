@@ -1,7 +1,5 @@
 <template>
-	<el-config-provider>
-		<router-view />
-	</el-config-provider>
+	<div>home</div>
 </template>
 
 <script setup lang="js"></script>

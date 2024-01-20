@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia';
 
-export const useConfig = defineStore('config', {
+/**
+ * 布局配置
+ */
+export const useThemeConfig = defineStore('themeConfig', {
 	state: () => ({
 		themeConfig: {
 			/**

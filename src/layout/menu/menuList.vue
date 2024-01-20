@@ -22,7 +22,7 @@
 <script setup lang="js">
 	import { computed, reactive, defineAsyncComponent, watch } from 'vue';
 	import { storeToRefs } from 'pinia';
-	import { useConfig } from '@/stores/config.js';
+	import { useThemeConfig } from '@/stores/themeConfig.js';
 
 	const subItem = defineAsyncComponent(() => import('./subItem.vue'));
 
@@ -43,7 +43,7 @@
 	// 定义内容变量
 	// 获取该store的方法式直接调用该回调函数
 	// 解构store中的数据，和vue的props一样会丢失响应性,利用pinia的storeToRefs函数，将state中的数据变为了响应式的
-	const storesConfig = useConfig();
+	const storesConfig = useThemeConfig();
 	const { themeConfig } = storeToRefs(storesConfig);
 
 	// 定义变量
