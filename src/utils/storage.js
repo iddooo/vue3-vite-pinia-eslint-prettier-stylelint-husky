@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
 /**
  * window.localStorage 浏览器永久缓存
@@ -40,23 +40,23 @@ export const Local = {
 export const Session = {
 	// 设置临时缓存
 	set(key, val) {
-		if (key === 'token') return Cookies.set(key, val);
+		// if (key === 'token') return Cookies.set(key, val);
 		window.sessionStorage.setItem(Local.setKey(key), JSON.stringify(val));
 	},
 	// 获取临时缓存
 	get(key) {
-		if (key === 'token') return Cookies.get(key);
+		// if (key === 'token') return Cookies.get(key);
 		let json = window.sessionStorage.getItem(Local.setKey(key));
 		return JSON.parse(json);
 	},
 	// 移除临时缓存
 	remove(key) {
-		if (key === 'token') return Cookies.remove(key);
+		// if (key === 'token') return Cookies.remove(key);
 		window.sessionStorage.removeItem(Local.setKey(key));
 	},
 	// 移除全部临时缓存
 	clear() {
-		Cookies.remove('token');
+		// Cookies.remove('token');
 		window.sessionStorage.clear();
 	},
 };

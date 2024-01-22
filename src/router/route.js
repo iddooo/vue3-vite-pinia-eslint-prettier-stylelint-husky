@@ -87,6 +87,17 @@ export const dynamicRoutes = [
 					},
 				],
 			},
+			/**
+			 * 提示：此处为大数据全屏界面
+			 */
+			{
+				path: '/visualizingDemo1',
+				name: 'visualizingDemo1',
+				component: () => import('@/views/visualizing/demo1.vue'),
+				meta: {
+					title: 'visualizingDemo1',
+				},
+			},
 		],
 	},
 ];
@@ -128,17 +139,6 @@ export const staticRoutes = [
 		component: () => import('@/views/login/index.vue'),
 		meta: {
 			title: 'login',
-		},
-	},
-	/**
-	 * 提示：此处为大数据全屏界面
-	 */
-	{
-		path: '/visualizingDemo1',
-		name: 'visualizingDemo1',
-		component: () => import('@/views/visualizing/demo1.vue'),
-		meta: {
-			title: 'visualizingDemo1',
 		},
 	},
 ];

@@ -50,7 +50,7 @@ export async function setFilterRouteEnd() {
  * @description 用于左侧菜单，横向菜单的显示
  * @description 用于 tagsView、菜单搜索
  */
-export function setFilterMenuAndTagsViewRoutes() {
+export async function setFilterMenuAndTagsViewRoutes() {
 	const storesRoutesList = useRoutesList();
 	const storesTagesViewRoutes = useTagsviewRoutes();
 	const storesUserInfo = useUserInfo();

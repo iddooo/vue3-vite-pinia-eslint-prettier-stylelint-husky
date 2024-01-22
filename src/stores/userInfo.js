@@ -58,7 +58,6 @@ export const useUserInfo = defineStore('userInfo', {
 						authBtnList: defaultAuthBtnList,
 					};
 					Session.set('userInfo', userInfos);
-					Session.set('token', userInfos);
 					resolve(userInfos);
 				}, 0);
 			});

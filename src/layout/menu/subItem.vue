@@ -2,14 +2,14 @@
 	<template v-for="item in chils">
 		<el-sub-menu :index="item.path" :key="item.path" v-if="item.children && item.children.length > 0">
 			<template #title>
-				<el-icon><icon-menu /></el-icon>
+				<span>icon todo</span>
 				<span>menu title {{ item.name }}</span>
 			</template>
 			<subItem :chils="item.children"></subItem>
 		</el-sub-menu>
 		<template v-else>
 			<el-menu-item :index="item.path" :key="item.path">
-				<el-icon><icon-menu /></el-icon>
+				<span>icon todo</span>
 				<template #title>{{ item.name }}</template>
 			</el-menu-item>
 		</template>

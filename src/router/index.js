@@ -3,7 +3,10 @@ import { notFoundAndNoPower, staticRoutes } from './route';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { initFrontEndControlRoutes } from './frontEnd.js';
-import { useKeepALiveNames } from '@/store/keepAliveNames';
+import { useKeepAliveNames } from '@/stores/keepAliveNames';
+import { Session } from '../utils/storage.js';
+import { useRoutesList } from '../stores/routesList.js';
+import { storeToRefs } from 'pinia';
 
 /**
  * 创建路由实例
@@ -57,7 +60,7 @@ export function formatTwoStageRoutes(arr) {
 			// 顶级关闭，全部不缓存
 			if (newArr[0].meta.isKeepAlive && v.meta.isKeepAlive) {
 				cacheList.push(v.name);
-				const stores = useKeepALiveNames();
+				const stores = useKeepAliveNames();
 				stores.setCacheKeepAlive(cacheList);
 			}
 		}
@@ -68,13 +71,45 @@ export function formatTwoStageRoutes(arr) {
  * 路由加载前
  */
 router.beforeEach(async (to, from, next) => {
+	// console.log('路由加载前 to', to.path);
 	NProgress.configure({ showSpinner: false });
 	NProgress.start();
-	await initFrontEndControlRoutes();
-	// 解决刷新时，一直跳 404 页面问题，关联问题 No match found for location with path 'xxx'
-	// to.query 防止页面刷新时，普通路由带参数时，参数丢失。动态路由（xxx/:id/:name"）isDynamic 无需处理
-	next();
-	NProgress.done();
+	let token = Session.get('token');
+	// debugger;
+	if (!token && to.path === '/login') {
+		// console.log('to login next:');
+		next();
+		NProgress.done();
+	} else {
+		if (!token) {
+			// console.log('!token next: /login');
+			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
+			Session.clear();
+			NProgress.done();
+		} else if (token && to.path === '/login') {
+			// console.log('next: /home');
+			next('/home');
+			NProgress.done();
+		} else {
+			const storesRoutesList = useRoutesList();
+			const { routesList } = storeToRefs(storesRoutesList);
+			// console.log('routeslist', routesList.value);
+			// 解决刷新时，一直跳 404 页面问题
+			// to.query 防止页面刷新时，普通路由带参数时，参数丢失。动态路由（xxx/:id/:name"）isDynamic 无需处理
+			// 解决无限循环问题，每次跳转到一个路由的时候都会 触发 全局守卫 由于判断条件未改变 所以 一直循环
+			if (routesList.value.length === 0) {
+				// 初始化动态路由，再次进入
+				await initFrontEndControlRoutes();
+				// console.log('next:', to.path);
+				next({ path: to.path, query: to.query });
+			} else {
+				// 动态路由已经添加，直接next
+				// console.log('next');
+				next();
+			}
+			NProgress.done();
+		}
+	}
 });
 
 /**
@@ -82,6 +117,7 @@ router.beforeEach(async (to, from, next) => {
  */
 router.afterEach(() => {
 	// console.log(router, router.getRoutes());
+	NProgress.done();
 });
 
 export default router;
