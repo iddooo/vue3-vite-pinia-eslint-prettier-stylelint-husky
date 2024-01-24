@@ -36,7 +36,7 @@ export const dynamicRoutes = [
 					isLink: false,
 					isIframe: false,
 					roles: ['admin', 'common'],
-					icon: '',
+					icon: 'ele-House',
 				},
 			},
 			{
@@ -52,7 +52,7 @@ export const dynamicRoutes = [
 					isLink: false,
 					isIframe: false,
 					roles: ['admin', 'common'],
-					icon: '',
+					icon: 'fa fa-address-card-o',
 				},
 				children: [
 					{
@@ -67,7 +67,7 @@ export const dynamicRoutes = [
 							isLink: false,
 							isIframe: false,
 							roles: ['admin'],
-							icon: '',
+							icon: 'iconfont icon-pengzhuangjiance',
 						},
 					},
 					{
@@ -81,8 +81,8 @@ export const dynamicRoutes = [
 							isAffix: true,
 							isLink: false,
 							isIframe: false,
-							roles: ['common'],
-							icon: '',
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-puguang',
 						},
 					},
 				],
@@ -96,6 +96,7 @@ export const dynamicRoutes = [
 				component: () => import('@/views/visualizing/demo1.vue'),
 				meta: {
 					title: 'visualizingDemo1',
+					icon: 'iconfont icon-shizhongshezhi',
 				},
 			},
 		],

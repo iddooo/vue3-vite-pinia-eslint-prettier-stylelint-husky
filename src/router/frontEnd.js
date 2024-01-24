@@ -46,7 +46,7 @@ export async function setFilterRouteEnd() {
 }
 
 /**
- * 递归过滤有权限的路由, 将路由添加到到 pinia routesList 中， 以及缓存处理后的一维路由到 tagsViewRoutes中 ，将 isKeepAlive:true 的路由名字 添加到pinia keepAliveNames 中
+ * 递归过滤有权限的路由, 将路由添加到到 pinia routesList 中， 以及缓存处理后的一维路由到 tagsViewRoutes中
  * @description 用于左侧菜单，横向菜单的显示
  * @description 用于 tagsView、菜单搜索
  */
