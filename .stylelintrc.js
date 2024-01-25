@@ -15,6 +15,7 @@ module.exports = {
 	rules: {
 		// https://stylelint.nodejs.cn/user-guide/rules
 		'selector-class-pattern': null,
+		'custom-property-pattern': null,
 		'selector-pseudo-class-no-unknown': [
 			true,
 			{

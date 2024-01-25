@@ -51,12 +51,12 @@
 		// 默认激活菜单的 index
 		defaultActive: '',
 		// 是否水平折叠收起菜单 isCollapse
-		isCollapse: false,
+		collapse: false,
 		// 是否只保持一个子菜单的展开 isUniqueOpened
 		uniqueOpened: true,
 		// 菜单展示模式  layout:transverse -> horizontal
 		mode: 'vertical',
-		// 菜单的背景颜色 layout:transverse ? topBar : menuBar
+		// 菜单的背景颜色 layout:transverse ? transparent : menuBar
 		backgroundColor: 'transparent',
 		//菜单默认字体颜色 layout:transverse ? topBarColor :menuBarColor
 		textColor: '#303133',
@@ -72,18 +72,18 @@
 			themeConfig.value.isUniqueOpened,
 			themeConfig.value.menuBar,
 			themeConfig.value.menuBarColor,
-			themeConfig.value.topBar,
 			themeConfig.value.topBarColor,
 		],
-		([primary, layout, isCollapse, isUniqueOpened, menuBar, menuBarColor, topBar, topBarColor]) => {
-			document.body.clientWidth <= 100 ? (state.isCollapse = false) : (state.isCollapse = isCollapse);
+		([primary, layout, isCollapse, isUniqueOpened, menuBar, menuBarColor, topBarColor]) => {
+			document.body.clientWidth <= 1000 ? (state.collapse = false) : (state.collapse = isCollapse);
 
 			state.uniqueOpened = isUniqueOpened;
 			state.activeTextColor = primary;
 
+			// 横向时 顶栏设置颜色
 			if (layout === 'transverse') {
 				state.mode = 'horizontal';
-				state.backgroundColor = topBar;
+				state.backgroundColor = 'transparent';
 				state.textColor = topBarColor;
 			} else {
 				state.mode = 'vertical';

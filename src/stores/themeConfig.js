@@ -38,6 +38,13 @@ export const useThemeConfig = defineStore('themeConfig', {
 			isCollapse: false,
 			// 是否开启菜单手风琴效果
 			isUniqueOpened: true,
+			// 是否开启 Breadcrumb 图标
+			isBreadcrumbIcon: true,
+			/**
+			 * 界面显示
+			 */
+			// 是否开启侧边栏 Logo
+			isShowLogo: true,
 			/**
 			 * 布局切换
 			 * 注意：为了演示，切换布局时，颜色会被还原成默认，代码位置：/@/layout/topBar/setings.vue
@@ -45,6 +52,11 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 */
 			// 布局切换：可选值"<defaults|classic|transverse|columns>"，默认 defaults
 			layout: 'defaults',
+			/**
+			 * 全局网站标题 / 副标题
+			 */
+			// 网站主标题（菜单导航、浏览器当前网页标题）
+			globalTitle: 'vvv',
 		},
 	}),
 	actions: {

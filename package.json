@@ -7,7 +7,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,less,scss,vue,html,md}\"",
-		"lint:eslint": "eslint --fix --ext .js --ext .jsx --ext .vue src/",
+		"lint:eslint": "eslint --fix --ext .js --ext .jsx --ext .ts --ext .vue src/",
 		"lint:stylelint": "stylelint --config .stylelintrc.js **/*.{css,sass,scss,less} --fix",
 		"commit": "git-cz",
 		"lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js"
@@ -32,6 +32,7 @@
 		"husky": "^8.0.3",
 		"js-cookie": "^3.0.5",
 		"lint-staged": "^15.2.0",
+		"mitt": "^3.0.1",
 		"nprogress": "^0.2.0",
 		"postcss": "^8.4.33",
 		"postcss-import": "^16.0.0",

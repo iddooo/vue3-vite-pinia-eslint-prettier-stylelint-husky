@@ -4,6 +4,7 @@ import App from './App.vue';
 import pinia from './stores';
 import router from './router';
 import { installSvg } from './components/svgIcon/install';
+import '@/styles/index.scss';
 
 const app = createApp(App);
 /** iconfont fontawesome4.7*/

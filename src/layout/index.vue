@@ -1,107 +1,52 @@
 <template>
-	<MenuList :menuList="state.menuList" />
-	<ParentView />
+	<component :is="layouts[themeConfig.layout]" />
 </template>
 
 <script setup lang="js">
-	import { defineAsyncComponent, onMounted, reactive, watch } from 'vue';
-	import { useRoutesList } from '@/stores/routesList';
+	import { defineAsyncComponent } from 'vue';
 	import { useThemeConfig } from '@/stores/themeConfig';
 	import { storeToRefs } from 'pinia';
-	const MenuList = defineAsyncComponent(() => import('./menu/menuList.vue'));
-	const ParentView = defineAsyncComponent(() => import('./routerView/parent.vue'));
+	import mittBus from '@/utils/mitt';
+	import { Local } from '@/utils/storage';
 
-	// 定义变量
-	const state = reactive({
-		menuList: [
-			// {
-			// 	name: 1,
-			// 	children: [
-			// 		{
-			// 			name: '1-1',
-			// 			children: [
-			// 				{
-			// 					name: '1-1-1',
-			// 				},
-			// 			],
-			// 		},
-			// 		{ name: '1-2' },
-			// 	],
-			// },
-			// {
-			// 	name: 2,
-			// },
-		],
-	});
-
-	const storesRoutesList = useRoutesList();
-	const { routesList } = storeToRefs(storesRoutesList);
-
+	// 引入组件
+	const layouts = {
+		defaults: defineAsyncComponent(() => import('@/layout/theme/defaults.vue')),
+		classic: defineAsyncComponent(() => import('@/layout/theme/classic.vue')),
+		columns: defineAsyncComponent(() => import('@/layout/theme/columns.vue')),
+		transverse: defineAsyncComponent(() => import('@/layout/theme/transverse.vue')),
+	};
+	// 定义变量内容
 	const storesThemeConfig = useThemeConfig();
 	const { themeConfig } = storeToRefs(storesThemeConfig);
-	// 设置/过滤路由（非静态路由/是否显示在菜单中）
-	const setFilterRoutes = () => {
-		let { layout } = themeConfig.value;
-		if (layout == 'classic') {
-			state.menuList = delClassicChildren(filterRoutesFun(routesList.value));
-		} else {
-			state.menuList = filterRoutesFun(routesList.value);
-		}
-	};
-	// 路由过滤递归函数
-	const filterRoutesFun = (arr) => {
-		return arr
-			.filter((item) => !item.meta.isHide)
-			.map((item) => {
-				item = Object.assign({}, item);
-				if (item.children) item.children = filterRoutesFun(item.children);
-				return item;
-			});
-	};
-	// classic布局中菜单 删除路由中的children
-	const delClassicChildren = (arr) => {
-		arr.map((v) => {
-			if (v.children) delete v.children;
-		});
-		return arr;
-	};
 
-	// 监听用户权限切换，用于演示 `权限管理 -> 前端控制 -> 页面权限` 权限切换不生效
-	watch(
-		() => routesList.value,
-		() => {
-			setFilterRoutes();
+	// 窗口大小改变
+	const onLayoutResize = () => {
+		if (!Local.get('oldLayout')) Local.set('oldLayout', themeConfig.value.layout);
+		const clientWidth = document.body.clientWidth;
+		// 手机不支持切换布局 只支持defaults
+		if (clientWidth < 1000) {
+			themeConfig.value.isCollapse = false;
+			mittBus.emit('layoutMobileResize', {
+				layout: 'defaults',
+				clientWidth,
+			});
+		} else {
+			mittBus.emit('layoutMobileResize', {
+				layout: Local.get('oldLayout') ? Local.get('oldLayout') : themeConfig.value.layout,
+				clientWidth,
+			});
 		}
-	);
-	//页面加载
-	onMounted(() => {
-		setFilterRoutes();
+	};
+	// 页面加载前
+	onBeforeMount(() => {
+		onLayoutResize();
+		window.addEventListener('resize', onLayoutResize);
+	});
+	// 页面卸载时
+	onUnmounted(() => {
+		window.removeEventListener('resize', onLayoutResize);
 	});
 </script>
 
-<style scoped lang="scss">
-	.container {
-		background-color: pink;
-		font-size: large;
-	}
-
-	ul {
-		list-style: none;
-		font-size: 12px;
-		color: #333;
-		line-height: 48px;
-
-		a {
-			text-decoration: none;
-			color: #333;
-		}
-
-		li:nth-of-type(n) {
-			background-color: #ccc;
-		}
-
-		li:nth-of-type(2n) {
-			background-color: #eee;
-		}
-	}
-</style>
+<style scoped lang="scss"></style>
