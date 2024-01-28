@@ -38,8 +38,20 @@ export const useThemeConfig = defineStore('themeConfig', {
 			isCollapse: false,
 			// 是否开启菜单手风琴效果
 			isUniqueOpened: true,
+			// 是否开启 Breadcrumb，强制经典、横向布局不显示
+			isBreadcrumb: true,
 			// 是否开启 Breadcrumb 图标
 			isBreadcrumbIcon: true,
+			// 是否开启 Tagsview
+			isTagsview: true,
+			// 是否开启 Tagsview 图标
+			isTagsviewIcon: true,
+			// 是否开启 TagsView 缓存
+			isCacheTagsView: false,
+			// 是否开启 TagsView 拖拽
+			isSortableTagsView: true,
+			// 是否开启 TagsView 共用
+			isShareTagsView: false,
 			/**
 			 * 界面显示
 			 */

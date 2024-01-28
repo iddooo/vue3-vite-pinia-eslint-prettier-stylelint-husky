@@ -13,7 +13,7 @@ export async function initFrontEndControlRoutes() {
 	await useUserInfo().setUserInfo();
 	//动态添加路由 过滤isKeepAlive路由 添加到pinia keepAliveNames 中
 	await setAddRoute();
-	// 过滤有权限的路由到 pinia routesList中 及 缓存多级嵌套数据处理后的一维数组
+	// 过滤有权限的路由到 pinia routesList中 及 缓存多级嵌套数据处理后的一维数组 用于 tagsViewRoutes
 	setFilterMenuAndTagsViewRoutes();
 }
 

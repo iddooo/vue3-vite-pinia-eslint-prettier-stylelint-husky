@@ -22,7 +22,9 @@ export const dynamicRoutes = [
 		name: '/',
 		component: () => import('@/layout/index.vue'),
 		redirect: '/home',
-		meta: {},
+		meta: {
+			isKeepAlive: true,
+		},
 		children: [
 			{
 				path: '/home',
@@ -32,7 +34,7 @@ export const dynamicRoutes = [
 					title: 'home',
 					isHide: false,
 					isKeepAlive: true,
-					isAffix: true,
+					isAffix: false,
 					isLink: false,
 					isIframe: false,
 					roles: ['admin', 'common'],
@@ -48,11 +50,11 @@ export const dynamicRoutes = [
 					title: 'test',
 					isHide: false,
 					isKeepAlive: true,
-					isAffix: true,
+					isAffix: false,
 					isLink: false,
 					isIframe: false,
 					roles: ['admin', 'common'],
-					icon: 'fa fa-address-card-o',
+					icon: 'iconfont icon-qianshuxieyi',
 				},
 				children: [
 					{
@@ -63,7 +65,7 @@ export const dynamicRoutes = [
 							title: 'test1',
 							isHide: false,
 							isKeepAlive: true,
-							isAffix: true,
+							isAffix: false,
 							isLink: false,
 							isIframe: false,
 							roles: ['admin'],
@@ -78,7 +80,7 @@ export const dynamicRoutes = [
 									title: 'test11',
 									isHide: false,
 									isKeepAlive: true,
-									isAffix: true,
+									isAffix: false,
 									isLink: false,
 									isIframe: false,
 									roles: ['admin', 'common'],
@@ -93,11 +95,11 @@ export const dynamicRoutes = [
 									title: 'test12',
 									isHide: false,
 									isKeepAlive: true,
-									isAffix: true,
+									isAffix: false,
 									isLink: false,
 									isIframe: false,
 									roles: ['admin', 'common'],
-									icon: 'iconfont icon-puguang',
+									icon: 'iconfont icon-kandian-zhihui',
 								},
 							},
 						],
@@ -110,11 +112,11 @@ export const dynamicRoutes = [
 							title: 'test2',
 							isHide: false,
 							isKeepAlive: true,
-							isAffix: true,
+							isAffix: false,
 							isLink: false,
 							isIframe: false,
 							roles: ['admin', 'common'],
-							icon: 'iconfont icon-puguang',
+							icon: 'iconfont icon-kaitongfuwu',
 						},
 					},
 				],
@@ -123,7 +125,7 @@ export const dynamicRoutes = [
 			 * 提示：此处为大数据全屏界面
 			 */
 			{
-				path: '/visualizingDemo1',
+				path: '/visualizingDemo1/:id/:name',
 				name: 'visualizingDemo1',
 				component: () => import('@/views/visualizing/demo1.vue'),
 				meta: {
