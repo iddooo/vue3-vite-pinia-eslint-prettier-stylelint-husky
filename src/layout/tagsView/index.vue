@@ -53,7 +53,7 @@
 	import { useRoute, useRouter } from 'vue-router';
 	import { isObjectValueEqual } from '@/utils/arrayOperation';
 	import mittBus from '@/utils/mitt';
-
+	import { Session } from '@/utils/storage';
 	// 定义变量内容
 	//ref 除了处理响应式数据，还可以用于访问组件中的dom元素，组件实例，以及存储任何需要在组件中进行状态管理的值。比如定时器
 	const scrollbarRef = ref();
@@ -111,7 +111,7 @@
 		else await singleAddTagsView(to);
 		if (state.tagsViewList.some((v) => v.path === path)) {
 			// 防止首次进入界面时(登录进入) tagsViewList 不存浏览器中
-			// addBrowserSetSession(state.tagsViewList);
+			addBrowserSetSession(state.tagsViewList);
 			// console.log('==============tagsViewList 存在 return==================')
 			return false;
 		}
@@ -130,7 +130,7 @@
 		await storesKeepALiveNames.addCachedView(item);
 		// 将item 添加到state.tagsViewList
 		state.tagsViewList.push({ ...item });
-		// await addBrowserSetSession(state.tagsViewList);
+		await addBrowserSetSession(state.tagsViewList);
 	};
 
 	// 处理可开启多标签详情，单标签详情（动态路由（xxx/:id/:name"），普通路由处理）
@@ -164,7 +164,7 @@
 			// 将item 添加到state.tagsViewList
 			state.tagsViewList.push({ ...item });
 			// console.log('==============完全相同项 不存在,添加tagsview item===',item)
-			// addBrowserSetSession(state.tagsViewList);
+			addBrowserSetSession(state.tagsViewList);
 		}
 	};
 	// 处理单标签时，第二次的参数未覆盖第一次的 tagsViewList 值（Session Storage）
@@ -182,7 +182,7 @@
 				// console.log('tagsViewList 存在 path 但是 parmas is not equal======覆盖参数')
 				// console.log('v.params',v.params,'v.query',v.query,'to.params',to.params,'to.query',to.query)
 				to?.meta?.isDynamic ? (v.params = to.params) : (v.query = to?.query);
-				// addBrowserSetSession(state.tagsViewList);
+				addBrowserSetSession(state.tagsViewList);
 			}
 		});
 	};
@@ -292,6 +292,28 @@
 		state.routePath = (await route.meta.isDynamic) ? route.meta.isDynamicPath : route.path;
 		state.tagsViewList = [];
 		state.tagsViewRoutesList = tagsViewRoutes.value;
+		initTagsView();
+	};
+	// pinia 中获取路由信息：如果是设置了固定的（isAffix），进行初始化显示
+	const initTagsView = async () => {
+		if (Session.get('tagsViewList') && getThemeConfig.value.isCacheTagsView) {
+			state.tagsViewList = await Session.get('tagsViewList');
+		} else {
+			await state.tagsViewRoutesList.map((v) => {
+				if (v.meta?.isAffix && !v.meta.isHide) {
+					v.url = setTagsViewHighlight(v);
+					state.tagsViewList.push({ ...v });
+					storesKeepALiveNames.addCachedView(v);
+				}
+			});
+		}
+		// 初始化当前元素(li)的下标
+		// getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+	};
+
+	// 存储 tagsViewList 到浏览器临时缓存中，页面刷新时，保留记录
+	const addBrowserSetSession = (tagsViewList) => {
+		Session.set('tagsViewList', tagsViewList);
 	};
 	// 设置 tagsView 可以进行拖拽
 	// const initSortable = () => {};

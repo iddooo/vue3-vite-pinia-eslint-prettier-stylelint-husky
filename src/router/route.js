@@ -34,7 +34,7 @@ export const dynamicRoutes = [
 					title: 'home',
 					isHide: false,
 					isKeepAlive: true,
-					isAffix: false,
+					isAffix: true,
 					isLink: false,
 					isIframe: false,
 					roles: ['admin', 'common'],

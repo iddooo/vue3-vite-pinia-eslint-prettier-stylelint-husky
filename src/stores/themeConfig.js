@@ -47,7 +47,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			// 是否开启 Tagsview 图标
 			isTagsviewIcon: true,
 			// 是否开启 TagsView 缓存
-			isCacheTagsView: false,
+			isCacheTagsView: true,
 			// 是否开启 TagsView 拖拽
 			isSortableTagsView: true,
 			// 是否开启 TagsView 共用
