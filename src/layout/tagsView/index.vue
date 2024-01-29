@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-tagsview" :class="{ 'layout-tagsview-shadow': getThemeConfig.layout === 'classic' }">
 		<el-scrollbar ref="scrollbarRef" @wheel.prevent="onHandleScroll">
-			<ul class="layout-tagsview-ul">
+			<ul class="layout-tagsview-ul" ref="tagsUlRef">
 				<li
 					v-for="(v, k) in state.tagsViewList"
 					:key="k"
@@ -54,16 +54,19 @@
 	import { isObjectValueEqual } from '@/utils/arrayOperation';
 	import mittBus from '@/utils/mitt';
 	import { Session } from '@/utils/storage';
+	import Sortable from 'sortablejs';
 	// 定义变量内容
 	//ref 除了处理响应式数据，还可以用于访问组件中的dom元素，组件实例，以及存储任何需要在组件中进行状态管理的值。比如定时器
 	const scrollbarRef = ref();
 	const tagsRefs = ref([]);
+	const tagsUlRef = ref();
 	const state = reactive({
 		routeActive: '',
 		routePath: '',
 		tagsViewList: [],
 		tagsViewRoutesList: [],
 		tagsRefsIndex: 0,
+		sortable: '',
 	});
 	const storesThemeConfig = useThemeConfig();
 	const { themeConfig } = storeToRefs(storesThemeConfig);
@@ -83,6 +86,75 @@
 	// 鼠标滚轮滚动
 	const onHandleScroll = (e) => {
 		scrollbarRef.value.$refs.wrapRef.scrollLeft += e.wheelDelta / 4;
+	};
+	// 获取 tagsView 的下标：用于处理 tagsView 点击时的横向滚动
+	const getTagsRefsIndex = (path) => {
+		nextTick(async () => {
+			// await 使用该写法，防止拿取不到 tagsViewList 列表数据不完整
+			let tagsViewList = await state.tagsViewList;
+			state.tagsRefsIndex = tagsViewList.findIndex((v) => {
+				if (getThemeConfig.value.isShareTagsView) {
+					return v.path === path;
+				} else {
+					return v.url === path;
+				}
+			});
+			// 添加初始化横向滚动条移动到对应位置
+			tagsViewmoveToCurrentTag();
+		});
+	};
+	// tagsView 横向滚动
+	const tagsViewmoveToCurrentTag = () => {
+		nextTick(() => {
+			if (tagsRefs.value.length <= 0) return false;
+			// 当前 li 元素
+			let liDom = tagsRefs.value[state.tagsRefsIndex];
+			// 当前 li 元素下标
+			let liIndex = state.tagsRefsIndex;
+			// 当前 ul 下 li 元素总长度
+			let liLength = tagsRefs.value.length;
+			// 最前 li
+			let liFirst = tagsRefs.value[0];
+			// 最后 li
+			let liLast = tagsRefs.value[tagsRefs.value.length - 1];
+			// 当前滚动条的值
+			let scrollRefs = scrollbarRef.value.$refs.wrapRef;
+
+			// 当前滚动条滚动宽度
+			let scrollS = scrollRefs.scrollWidth;
+			// 当前滚动条偏移宽度
+			let offsetW = scrollRefs.offsetWidth;
+			// 当前滚动条偏移距离
+			let scrollL = scrollRefs.scrollLeft;
+			// 上一个 tags li dom
+			let liPrevTag = tagsRefs.value[state.tagsRefsIndex - 1];
+			// 下一个 tags li dom
+			let liNextTag = tagsRefs.value[state.tagsRefsIndex + 1];
+			// 上一个 tags li dom 的偏移距离
+			let beforePrevL = 0;
+			// 下一个 tags li dom 的偏移距离
+			let afterNextL = 0;
+			if (liDom === liFirst) {
+				// 头部
+				scrollRefs.scrollLeft = 0;
+			} else if (liDom === liLast) {
+				// 尾部
+				scrollRefs.scrollLeft = scrollS - offsetW;
+			} else {
+				// 非头/尾部
+				if (liIndex === 0) beforePrevL = liFirst.offsetLeft - 5;
+				else beforePrevL = liPrevTag?.offsetLeft - 5;
+				if (liIndex === liLength) afterNextL = liLast.offsetLeft + liLast.offsetWidth + 5;
+				else afterNextL = liNextTag.offsetLeft + liNextTag.offsetWidth + 5;
+				if (afterNextL > scrollL + offsetW) {
+					scrollRefs.scrollLeft = afterNextL - offsetW;
+				} else if (beforePrevL < scrollL) {
+					scrollRefs.scrollLeft = beforePrevL;
+				}
+			}
+			// 更新滚动条，防止不出现
+			scrollbarRef.value.update();
+		});
 	};
 	// tagsView 高亮项
 	const isActive = (v) => {
@@ -311,7 +383,7 @@
 			await addTagsView(route);
 		}
 		// 初始化当前元素(li)的下标
-		// getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+		getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
 	};
 
 	// 存储 tagsViewList 到浏览器临时缓存中，页面刷新时，保留记录
@@ -319,13 +391,32 @@
 		Session.set('tagsViewList', tagsViewList);
 	};
 	// 设置 tagsView 可以进行拖拽
-	// const initSortable = () => {};
-
+	const initSortable = async () => {
+		const el = document.querySelector('.layout-tagsview-ul');
+		if (!el) return false;
+		state.sortable.el && state.sortable.destroy();
+		state.sortable = Sortable.create(el, {
+			animation: 300,
+			dataIdAttr: 'data-url',
+			// 为true时sortable对象不能拖放排序等功能，为false时为可以进行排序，相当于一个开关；
+			disabled: getThemeConfig.value.isSortableTagsView ? false : true,
+			// 结束拖拽
+			onEnd: () => {
+				const sortEndList = [];
+				state.sortable.toArray().map((val) => {
+					state.tagsViewList.map((v) => {
+						if (v.url === val) sortEndList.push({ ...v });
+					});
+				});
+				addBrowserSetSession(sortEndList);
+			},
+		});
+	};
 	// 页面加载时
 	onMounted(() => {
 		// 初始化 pinia 中的 tagsViewRoutes 列表
 		getTagsViewRoutes();
-		// initSortable();
+		initSortable();
 	});
 	// 路由更新时（组件内生命钩子）
 	onBeforeRouteUpdate(async (to) => {
@@ -334,7 +425,7 @@
 		// console.log('[路由改变 to]', to);
 		// 添加 tagsView
 		await addTagsView(to);
-		// getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+		getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
 	});
 </script>
 
