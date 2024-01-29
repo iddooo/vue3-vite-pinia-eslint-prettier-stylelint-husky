@@ -112,7 +112,7 @@
 		if (state.tagsViewList.some((v) => v.path === path)) {
 			// 防止首次进入界面时(登录进入) tagsViewList 不存浏览器中
 			addBrowserSetSession(state.tagsViewList);
-			// console.log('==============tagsViewList 存在 return==================')
+			// console.log('==============tagsViewList 存在 return==================');
 			return false;
 		}
 		let item = state.tagsViewRoutesList.find((v) => v.path === path);
@@ -136,7 +136,7 @@
 	// 处理可开启多标签详情，单标签详情（动态路由（xxx/:id/:name"），普通路由处理）
 	const solveAddTagsView = async (to) => {
 		let isDynamicPath = to?.meta?.isDynamic ? to.meta.isDynamicPath : to.path;
-		// console.log('[不共享标签 to path:]',isDynamicPath,'对比  [tagsViewList]',state.tagsViewList)
+		// console.log('[不共享标签 to path:]', isDynamicPath, '对比  [tagsViewList]', state.tagsViewList);
 		let current = state.tagsViewList.filter(
 			(v) =>
 				v.path === isDynamicPath &&
@@ -145,13 +145,15 @@
 					to?.meta?.isDynamic ? (to?.params ? to?.params : null) : to?.query ? to?.query : null
 				)
 		);
-		// console.log('path相同 且 参数 完全相同项', current)
+		// console.log('path相同 且 参数 完全相同项', current);
 
 		if (current.length <= 0) {
 			// 防止：Avoid app logic that relies on enumerating keys on a component instance. The keys will be empty in production mode to avoid performance overhead.
 			let item = state.tagsViewRoutesList.find((v) => v.path === isDynamicPath);
 			// item 不存在
 			if (!item) return false;
+			// item 为固定在 tagsView 栏上已添加
+			if (item.meta.isAffix) return false;
 			// item 为超连接
 			if (item?.meta?.isLink && !item.meta.isIframe) return false;
 			// 动态路由 xxx/:id/:name 获取params 否则 获取query
@@ -163,7 +165,7 @@
 			await storesKeepALiveNames.addCachedView(item);
 			// 将item 添加到state.tagsViewList
 			state.tagsViewList.push({ ...item });
-			// console.log('==============完全相同项 不存在,添加tagsview item===',item)
+			// console.log('==============完全相同项 不存在,添加tagsview item===', item);
 			addBrowserSetSession(state.tagsViewList);
 		}
 	};
@@ -306,6 +308,7 @@
 					storesKeepALiveNames.addCachedView(v);
 				}
 			});
+			await addTagsView(route);
 		}
 		// 初始化当前元素(li)的下标
 		// getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
@@ -328,7 +331,7 @@
 	onBeforeRouteUpdate(async (to) => {
 		state.routeActive = setTagsViewHighlight(to);
 		state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
-		// console.log('[路由改变 to]',to)
+		// console.log('[路由改变 to]', to);
 		// 添加 tagsView
 		await addTagsView(to);
 		// getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);

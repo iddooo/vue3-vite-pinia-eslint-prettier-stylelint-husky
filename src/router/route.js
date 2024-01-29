@@ -61,6 +61,7 @@ export const dynamicRoutes = [
 						path: '/test/test1',
 						name: 'test1',
 						component: () => import('@/layout/routerView/parent.vue'),
+						redirect: '/test/test1/test11',
 						meta: {
 							title: 'test1',
 							isHide: false,
@@ -73,7 +74,7 @@ export const dynamicRoutes = [
 						},
 						children: [
 							{
-								path: '/test/test1/test1',
+								path: '/test/test1/test11',
 								name: 'test11',
 								component: () => import('@/views/test/test1.vue'),
 								meta: {
@@ -88,7 +89,7 @@ export const dynamicRoutes = [
 								},
 							},
 							{
-								path: '/test/test1/test2',
+								path: '/test/test1/test22',
 								name: 'test12',
 								component: () => import('@/views/test/test2.vue'),
 								meta: {
@@ -107,7 +108,8 @@ export const dynamicRoutes = [
 					{
 						path: '/test/test2',
 						name: 'test2',
-						component: () => import('@/views/test/test2.vue'),
+						component: () => import('@/layout/routerView/parent.vue'),
+						redirect: '/test/test2/test21',
 						meta: {
 							title: 'test2',
 							isHide: false,
@@ -118,6 +120,38 @@ export const dynamicRoutes = [
 							roles: ['admin', 'common'],
 							icon: 'iconfont icon-kaitongfuwu',
 						},
+						children: [
+							{
+								path: '/test/test2/test21',
+								name: 'test21',
+								component: () => import('@/views/test/test1.vue'),
+								meta: {
+									title: 'test21',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
+									isLink: false,
+									isIframe: false,
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-puguang',
+								},
+							},
+							{
+								path: '/test/test2/test22',
+								name: 'test22',
+								component: () => import('@/views/test/test2.vue'),
+								meta: {
+									title: 'test22',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
+									isLink: false,
+									isIframe: false,
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-kandian-zhihui',
+								},
+							},
+						],
 					},
 				],
 			},
